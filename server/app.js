@@ -17,7 +17,7 @@ const app = new Koa();
 const isProduction = process.env.NODE_ENV === 'production';
 
 // log request URL:
-app.use(async (ctx, next) => {
+app.use(async(ctx, next) => {
     console.log(`Process ${ctx.request.method} ${ctx.request.url}...`);
     var
         start = new Date().getTime(),
@@ -31,7 +31,7 @@ app.use(async (ctx, next) => {
 app.use(bodyParser());
 
 app.use(views(path.join(__dirname, './views'), {
-  extension: 'ejs'
+    extension: 'ejs'
 }))
 
 // bind .rest() for ctx:
@@ -42,7 +42,7 @@ app.use(router.routes()).use(router.allowedMethods())
 
 // static file support:
 app.use(static(
-  path.join( __dirname,  './public')
+    path.join(__dirname, './public')
 ))
 
 app.listen(3000);

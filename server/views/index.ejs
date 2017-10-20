@@ -2,28 +2,28 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="css/app.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css">
         <title>TwittMap</title>
-        <style>
-          /* Always set the map height explicitly to define the size of the div
-           * element that contains the map. */
-          #app, #map {
-            height: 100%;
-          }
-          /* Optional: Makes the sample page fill the window. */
-          html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-          }
-        </style>
     </head>
     <body>
+        
         <div id="app">
-            <div id="map"></div>
-            <!-- <router-view></router-view> -->
+            <div id="panel">
+                <div id="search-box">
+                    <form @submit.prevent="search">
+                        <input type="text" id="keyword" v-model="keyword" placeholder="Search tweets...">
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+                <tweet-list :tweets="tweets"></tweet-list>
+            </div> 
+            <gmap></gmap>
         </div>
+
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2eDb_LLkCZNOWPNfH3ThIXLlIfkoB3cQ"></script>
         <script src="/js/app.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2eDb_LLkCZNOWPNfH3ThIXLlIfkoB3cQ&callback=app.initMap" async defer></script>
+        
     </body>
 </html>

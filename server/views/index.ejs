@@ -3,23 +3,27 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
         <link rel="stylesheet" href="css/app.css">
         <title>TwittMap</title>
     </head>
     <body>
         
-        <div id="app">
-            <div id="panel">
-                <div id="search-box">
-                    <form @submit.prevent="searchByKeyword">
-                        <input type="text" id="keyword" v-model="keyword" placeholder="Search tweets...">
-                        <button type="submit">Search</button>
-                    </form>
-                </div>
-                <tweet-list :tweets="tweets"></tweet-list>
-            </div> 
-            <gmap :tweets="tweets"></gmap>
+        <div id="app" class="container-fluid">
+            <div id="content" class="row">
+                <div id="panel" class="col-md-3">
+                    <div id="search-box" class="input-group">
+                        <form class="form-inline" @submit.prevent="searchByKeyword">
+                            <input type="text" id="keyword" v-model="keyword" placeholder="Search tweets..." class="form-control">
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-primary">Search</button>
+                            </span>
+                        </form>
+                    </div>
+                    <tweet-list :tweets="tweets"></tweet-list>
+                </div> 
+                <gmap class="col-md-9" :tweets="tweets"></gmap>
+            </div>
         </div>
 
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2eDb_LLkCZNOWPNfH3ThIXLlIfkoB3cQ"></script>

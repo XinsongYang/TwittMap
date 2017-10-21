@@ -1371,54 +1371,7 @@ function applyToTag (styleElement, obj) {
 
 
 /***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(44)
-/* template */
-var __vue_template__ = __webpack_require__(45)
-/* template functional */
-  var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "src/components/SearchBox.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-48b6337d", Component.options)
-  } else {
-    hotAPI.reload("data-v-48b6337d", Component.options)
-' + '  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
+/* 12 */,
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1445,40 +1398,18 @@ new Vue({
 
     components: {
         'gmap': __webpack_require__(38),
-        'search-box': __webpack_require__(12),
         'tweet': __webpack_require__(51),
         'tweet-list': __webpack_require__(54)
     },
 
-    created: function created() {
-        var _this = this;
-
-        Event.$on('submit', function (keyword) {
-            // range
-            _this.keyword = keyword;
-
-            axios.get('/api/tweets', {
-                params: { keyword: keyword }
-            }).then(function (response) {
-                _this.tweets = response.data.tweets;
-                // render
-            }).catch(function (error) {
-                alert("error");
-                console.log(error);
-            });
-        });
-    },
-
-
     methods: {
         search: function search() {
-            var _this2 = this;
+            var _this = this;
 
             axios.get('/api/tweets', {
                 params: { keyword: this.keyword }
             }).then(function (response) {
-                _this2.tweets = response.data.tweets;
-                // render
+                _this.tweets = response.data.tweets;
             }).catch(function (error) {
                 alert("error");
                 console.log(error);
@@ -1498,11 +1429,9 @@ new Vue({
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_axios__);
 
-// import VueRouter from 'vue-router';
 
 
 window.Vue = __WEBPACK_IMPORTED_MODULE_0_vue___default.a;
-// Vue.use(VueRouter);
 
 window.Event = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a();
 
@@ -13341,13 +13270,108 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            map: {},
+            markers: []
+        };
+    },
+
+
+    props: ['tweets'],
+
     mounted: function mounted() {
-        var map = new google.maps.Map(document.getElementById('map'), {
+        this.map = new google.maps.Map(document.getElementById('map'), {
             center: { lat: 37.275518, lng: -104.657942 },
             zoom: 5,
             mapTypeControl: false
         });
+    },
+
+
+    methods: {
+        render: function render() {
+            var _this = this;
+
+            var _loop = function _loop(tweet) {
+                var coordinates = tweet.coordinates.coordinates;
+                var marker = new google.maps.Marker({
+                    position: { lat: coordinates[1], lng: coordinates[0] },
+                    map: _this.map
+                });
+
+                var tweetWindow = new google.maps.InfoWindow({
+                    content: '<tweet :user="tweet.user.name" :time="tweet.timestamp_ms" :text="tweet.text"></tweet>'
+                });
+                marker.addListener('click', function () {
+                    tweetWindow.open(map, marker);
+                });
+
+                _this.markers.push(marker);
+            };
+
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = this.tweets[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var tweet = _step.value;
+
+                    _loop(tweet);
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+        },
+        clear: function clear() {
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
+
+            try {
+                for (var _iterator2 = this.markers[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var _marker = _step2.value;
+
+                    _marker.setMap(null);
+                }
+            } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
+                    }
+                } finally {
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
+                    }
+                }
+            }
+
+            this.markers = [];
+        }
+    },
+
+    watch: {
+        tweets: function tweets() {
+            this.clear();
+            this.render();
+        }
     }
+
 });
 
 /***/ }),
@@ -13371,98 +13395,8 @@ if (false) {
 }
 
 /***/ }),
-/* 44 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            keyword: ''
-        };
-    },
-
-
-    methods: {
-        onSubmit: function onSubmit() {
-            Event.$emit('submit', this.keyword);
-        }
-    }
-});
-
-/***/ }),
-/* 45 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { attrs: { id: "search-box" } }, [
-    _c(
-      "form",
-      {
-        on: {
-          submit: function($event) {
-            $event.preventDefault()
-            _vm.onSubmit($event)
-          }
-        }
-      },
-      [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.keyword,
-              expression: "keyword"
-            }
-          ],
-          attrs: {
-            type: "text",
-            id: "keyword",
-            placeholder: "Search tweets..."
-          },
-          domProps: { value: _vm.keyword },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.keyword = $event.target.value
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("button", { attrs: { type: "submit" } }, [_vm._v("Search")])
-      ]
-    )
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-48b6337d", module.exports)
-  }
-}
-
-/***/ }),
+/* 44 */,
+/* 45 */,
 /* 46 */,
 /* 47 */,
 /* 48 */,

@@ -1403,10 +1403,10 @@ new Vue({
     },
 
     methods: {
-        search: function search() {
+        searchByKeyword: function searchByKeyword() {
             var _this = this;
 
-            axios.get('/api/tweets', {
+            axios.get('/api/tweetsByKeyword', {
                 params: { keyword: this.keyword }
             }).then(function (response) {
                 _this.tweets = response.data.tweets;
@@ -1414,9 +1414,28 @@ new Vue({
                 alert("error");
                 console.log(error);
             });
-        }
-    }
+        },
+        searchByCoord: function searchByCoord(coordinate) {
+            var _this2 = this;
 
+            axios.get('/api/tweetsByCoord', {
+                params: coordinate
+            }).then(function (response) {
+                _this2.tweets = response.data.tweets;
+            }).catch(function (error) {
+                alert("error");
+                console.log(error);
+            });
+        }
+    },
+
+    mounted: function mounted() {
+        var _this3 = this;
+
+        Event.$on('mapClicked', function (coordinate) {
+            _this3.searchByCoord(coordinate);
+        });
+    }
 });
 
 /***/ }),
@@ -13280,16 +13299,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     props: ['tweets'],
 
+    components: {
+        'tweet': __webpack_require__(51)
+    },
+
     mounted: function mounted() {
         this.map = new google.maps.Map(document.getElementById('map'), {
             center: { lat: 37.275518, lng: -104.657942 },
             zoom: 5,
             mapTypeControl: false
         });
+        this.map.addListener('click', function (event) {
+            var lat = event.latLng.lat();
+            var lon = event.latLng.lng();
+            Event.$emit('mapClicked', { lat: lat, lon: lon });
+        });
     },
 
 
     methods: {
+        tweetContent: function tweetContent(tweet) {
+            return '\n            <div class="card">\n              <div class="card-content">\n                <div class="media">\n                  <div class="media-left">\n                    <figure class="image is-48x48">\n                      <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">\n                    </figure>\n                  </div>\n                  <div class="media-content">\n                    <p class="title is-4">' + tweet.user.name + '</p>\n                  </div>\n                </div>\n                <div class="content">\n                  ' + tweet.text + '\n                  <br>\n                  <time>' + tweet.timestamp_ms + '</time>\n                </div>\n              </div>\n            </div>\n            ';
+        },
         render: function render() {
             var _this = this;
 
@@ -13301,7 +13332,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 });
 
                 var tweetWindow = new google.maps.InfoWindow({
-                    content: '<tweet :user="tweet.user.name" :time="tweet.timestamp_ms" :text="tweet.text"></tweet>'
+                    content: _this.tweetContent(tweet),
+                    maxWidth: 200
                 });
                 marker.addListener('click', function () {
                     tweetWindow.open(map, marker);

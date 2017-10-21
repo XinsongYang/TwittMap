@@ -1,8 +1,9 @@
-const router = require('koa-router')()
-const twitterController = require('./../controllers/twitterController')
+const router = require('koa-router')();
+const twitterController = require('./../controllers/twitterController');
 
 const apiRouter = router
   .get('/keywords', twitterController.getKeywords)
-  .get('/tweets', twitterController.getTweets)
+  .get('/tweetsByKeyword', twitterController.getTweetsByKeyword)
+  .get('/tweetsByCoord', twitterController.getTweetsByCoord);
   
-module.exports = apiRouter
+module.exports = apiRouter;

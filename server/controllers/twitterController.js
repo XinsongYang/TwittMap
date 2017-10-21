@@ -31,7 +31,7 @@ module.exports = {
         });
     },
 
-    async getTweets(ctx, next) {
+    async getTweetsByKeyword(ctx, next) {
         let queryData = url.parse(ctx.request.url, true).query;
         let validation = new Validator(queryData, {
             keyword: 'required'
@@ -47,6 +47,51 @@ module.exports = {
                         }
                     }
                 }
+            }).then(function(resp) {
+                // TODO try
+                let hits = resp.hits.hits;
+                let tweets = hits.map(hit => hit._source);
+                ctx.rest({
+                    tweets
+                });
+            }, function(err) {
+                throw new APIError(err.code, err.message);
+                console.trace(err.message);
+            });
+        } else {
+            // TODO ERROR
+            throw new APIError();
+        }
+    },
+
+    async getTweetsByCoord(ctx, next) {
+        let queryData = url.parse(ctx.request.url, true).query;
+        let validation = new Validator(queryData, {
+            lat: 'required',
+            lon: 'required'
+        });
+        if (validation.passes()) {
+            await client.search({
+                index: 'twitter',
+                    type: 'tweet',
+                    body: {
+                        query: {
+                            bool: {
+                                must: {
+                                    match_all: {}
+                                },
+                                filter: {
+                                    geo_distance: {
+                                        distance: "200km",
+                                        "coordinates.coordinates": {
+                                            "lat": queryData.lat,
+                                            "lon": queryData.lon
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
             }).then(function(resp) {
                 // TODO try
                 let hits = resp.hits.hits;

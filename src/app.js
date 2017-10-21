@@ -16,8 +16,8 @@ new Vue({
     },
 
     methods: {
-        search() {
-            axios.get('/api/tweets', {
+        searchByKeyword() {
+            axios.get('/api/tweetsByKeyword', {
                 params: { keyword: this.keyword }
             }).then(response => {
                 this.tweets = response.data.tweets;
@@ -25,7 +25,24 @@ new Vue({
                 alert("error");
                 console.log(error);
             });
+        },
+
+        searchByCoord(coordinate) {
+            axios.get('/api/tweetsByCoord', {
+                params: coordinate
+            }).then(response => {
+                this.tweets = response.data.tweets;
+            }).catch( error => {
+                alert("error");
+                console.log(error);
+            });
         }
+    },
+
+    mounted() {
+        Event.$on('mapClicked', coordinate => {
+            this.searchByCoord(coordinate);
+        })
     }
 
 });

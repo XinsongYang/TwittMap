@@ -9,21 +9,12 @@
     </head>
     <body>
         
-        <div id="app" class="container-fluid">
-            <div id="content" class="row">
-                <div id="panel" class="col-md-3">
-                    <div id="search-box" class="input-group">
-                        <form class="form-inline" @submit.prevent="searchByKeyword">
-                            <input type="text" id="keyword" v-model="keyword" placeholder="Search tweets..." class="form-control">
-                            <span class="input-group-btn">
-                                <button type="submit" class="btn btn-primary">Search</button>
-                            </span>
-                        </form>
-                    </div>
-                    <tweet-list :tweets="tweets"></tweet-list>
-                </div> 
-                <gmap class="col-md-9" :tweets="tweets"></gmap>
-            </div>
+        <div id="app" class="box">
+            <div id="panel" class="box">
+                <search-box></search-box>
+                <tweet-list :tweets="tweets"></tweet-list>
+            </div> 
+            <gmap :tweets="tweets"></gmap>
         </div>
 
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2eDb_LLkCZNOWPNfH3ThIXLlIfkoB3cQ"></script>

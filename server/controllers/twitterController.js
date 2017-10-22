@@ -41,11 +41,16 @@ module.exports = {
                 index: 'twitter',
                 type: 'tweet',
                 body: {
+                    size: 10,
                     query: {
                         match: {
                             text: queryData.keyword
                         }
-                    }
+                    },
+                    sort: [
+                        { "timestamp_ms": { "order": "desc" } },
+                        { "user.id": { "order": "asc" } },
+                    ],
                 }
             }).then(function(resp) {
                 // TODO try

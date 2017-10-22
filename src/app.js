@@ -4,21 +4,22 @@ new Vue({
     el: '#app',
 
     data: {
-        keyword: '',
+        //keyword: '',
         tweets: [],
         response: {}
     },
 
     components: {
         'gmap': require('./components/Map'),
+        'search-box': require('./components/SearchBox'),
         'tweet': require('./components/Tweet'),
         'tweet-list': require('./components/TweetList')
     },
 
     methods: {
-        searchByKeyword() {
+        searchByKeyword(keyword) {
             axios.get('/api/tweetsByKeyword', {
-                params: { keyword: this.keyword }
+                params: { keyword }
             }).then(response => {
                 this.tweets = response.data.tweets;
             }).catch( error => {
@@ -40,9 +41,15 @@ new Vue({
     },
 
     mounted() {
+        
+        Event.$on('search', keyword => {
+            this.searchByKeyword(keyword);
+        }),
+
         Event.$on('mapClicked', coordinate => {
             this.searchByCoord(coordinate);
         })
+    
     }
 
 });

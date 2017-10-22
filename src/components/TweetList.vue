@@ -1,6 +1,6 @@
 <template>
     <div id="tweet-list" >
-        <tweet v-for="tweet in tweets" :key="tweet.id_str" :user="tweet.user.name" :timestamp="tweet.timestamp_ms" :text="tweet.text"></tweet>
+        <tweet v-for="tweet in tweets" :key="tweet.id_str" :data="tweet" ></tweet>
     </div>
 </template>
 
@@ -17,8 +17,5 @@
 </script>
 
 <style>
-    #tweet-list {
-        /*flex-grow: 1;
-        overflow-y: auto;*/
-    }
+
 </style>

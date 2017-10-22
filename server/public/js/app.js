@@ -1371,7 +1371,58 @@ function applyToTag (styleElement, obj) {
 
 
 /***/ }),
-/* 12 */,
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(61)
+}
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(44)
+/* template */
+var __vue_template__ = __webpack_require__(45)
+/* template functional */
+  var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/components/SearchBox.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-48b6337d", Component.options)
+  } else {
+    hotAPI.reload("data-v-48b6337d", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1391,23 +1442,24 @@ new Vue({
     el: '#app',
 
     data: {
-        keyword: '',
+        //keyword: '',
         tweets: [],
         response: {}
     },
 
     components: {
         'gmap': __webpack_require__(38),
+        'search-box': __webpack_require__(12),
         'tweet': __webpack_require__(51),
         'tweet-list': __webpack_require__(54)
     },
 
     methods: {
-        searchByKeyword: function searchByKeyword() {
+        searchByKeyword: function searchByKeyword(keyword) {
             var _this = this;
 
             axios.get('/api/tweetsByKeyword', {
-                params: { keyword: this.keyword }
+                params: { keyword: keyword }
             }).then(function (response) {
                 _this.tweets = response.data.tweets;
             }).catch(function (error) {
@@ -1432,7 +1484,9 @@ new Vue({
     mounted: function mounted() {
         var _this3 = this;
 
-        Event.$on('mapClicked', function (coordinate) {
+        Event.$on('search', function (keyword) {
+            _this3.searchByKeyword(keyword);
+        }), Event.$on('mapClicked', function (coordinate) {
             _this3.searchByCoord(coordinate);
         });
     }
@@ -13238,7 +13292,7 @@ exports = module.exports = __webpack_require__(10)(undefined);
 
 
 // module
-exports.push([module.i, "\n#map {\n    height: 100%;\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -13299,10 +13353,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     props: ['tweets'],
 
-    components: {
-        'tweet': __webpack_require__(51)
-    },
-
     mounted: function mounted() {
         this.map = new google.maps.Map(document.getElementById('map'), {
             center: { lat: 37.275518, lng: -104.657942 },
@@ -13319,7 +13369,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     methods: {
         tweetContent: function tweetContent(tweet) {
-            return '\n            <div class="card">\n              <div class="card-content">\n                <div class="media">\n                  <div class="media-left">\n                    <figure class="image is-48x48">\n                      <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">\n                    </figure>\n                  </div>\n                  <div class="media-content">\n                    <p class="title is-4">' + tweet.user.name + '</p>\n                  </div>\n                </div>\n                <div class="content">\n                  ' + tweet.text + '\n                  <br>\n                  <time>' + tweet.timestamp_ms + '</time>\n                </div>\n              </div>\n            </div>\n            ';
+            var date = new Date(parseInt(tweet.timestamp_ms));
+            return '\n            <div class="tweet">\n                <span class="username">@' + tweet.user.name + '}</span> <span class="time">' + date.toLocaleString() + '</span>\n                <div>' + tweet.text + '</div>\n            </div>\n            ';
         },
         render: function render() {
             var _this = this;
@@ -13427,8 +13478,135 @@ if (false) {
 }
 
 /***/ }),
-/* 44 */,
-/* 45 */,
+/* 44 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            keyword: ''
+        };
+    },
+
+
+    methods: {
+        search: function search() {
+            Event.$emit('search', keyword);
+        }
+    }
+
+});
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { attrs: { id: "search-box" } }, [
+    _c(
+      "form",
+      {
+        staticClass: "input-group",
+        on: {
+          submit: function($event) {
+            $event.preventDefault()
+            _vm.search($event)
+          }
+        }
+      },
+      [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.keyword,
+              expression: "keyword"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: {
+            type: "text",
+            id: "keyword",
+            list: "suggestions",
+            placeholder: "keyword"
+          },
+          domProps: { value: _vm.keyword },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.keyword = $event.target.value
+            }
+          }
+        }),
+        _vm._v(" "),
+        _vm._m(0),
+        _vm._v(" "),
+        _vm._m(1)
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("datalist", { attrs: { id: "suggestions" } }, [
+      _c("option", { attrs: { value: "job" } }),
+      _vm._v(" "),
+      _c("option", { attrs: { value: "hire" } }),
+      _vm._v(" "),
+      _c("option", { attrs: { value: "test" } })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "input-group-btn" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+        [_vm._v("Search")]
+      )
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-48b6337d", module.exports)
+  }
+}
+
+/***/ }),
 /* 46 */,
 /* 47 */,
 /* 48 */,
@@ -13498,16 +13676,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 
-    props: ['user', 'timestamp', 'text'],
+    props: ['data'],
 
     computed: {
+        user: function user() {
+            return this.data.user.name;
+        },
+
         time: function time() {
-            var date = new Date(parseInt(this.timestamp));
+            var date = new Date(parseInt(this.data.timestamp_ms));
             return date.toLocaleString();
+        },
+
+        text: function text() {
+            return this.data.text;
         }
     }
 
@@ -13625,14 +13810,7 @@ var render = function() {
     "div",
     { attrs: { id: "tweet-list" } },
     _vm._l(_vm.tweets, function(tweet) {
-      return _c("tweet", {
-        key: tweet.id_str,
-        attrs: {
-          user: tweet.user.name,
-          timestamp: tweet.timestamp_ms,
-          text: tweet.text
-        }
-      })
+      return _c("tweet", { key: tweet.id_str, attrs: { data: tweet } })
     })
   )
 }
@@ -13681,7 +13859,7 @@ exports = module.exports = __webpack_require__(10)(undefined);
 
 
 // module
-exports.push([module.i, "\n.tweet {\n    font-size: 12px;\n    margin: 15px 0;\n    border-bottom-style: solid;\n    border-width: 1px;\n    border-color: #cccccc;\n}\n.tweet:hover {\n}\n.username {\n    color: #3b94d9;\n    font-weight: bold;\n}\n.time {\n    color: #a7a7a7;\n    font-size: 11px;\n}\n", ""]);
+exports.push([module.i, "\n.tweet {\n    font-size: 12px;\n    padding: 10px;\n    border-bottom-style: solid;\n    border-width: 1px;\n    border-color: #cccccc;\n}\n.tweet:hover {\n    background: #f9f9f9;\n}\n.tweet .username {\n    color: #3b94d9;\n    font-weight: bold;\n}\n.tweet .time {\n    color: #a7a7a7;\n    font-size: 11px;\n}\n", ""]);
 
 // exports
 
@@ -13721,7 +13899,47 @@ exports = module.exports = __webpack_require__(10)(undefined);
 
 
 // module
-exports.push([module.i, "\n#tweet-list {\n    /*flex-grow: 1;\n    overflow-y: auto;*/\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 61 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(62);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(11)("15479d4e", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-48b6337d\",\"scoped\":false,\"hasInlineConfig\":true}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./SearchBox.vue", function() {
+     var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-48b6337d\",\"scoped\":false,\"hasInlineConfig\":true}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./SearchBox.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 62 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(10)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n#search-box {\n    padding: 10px;\n}\n", ""]);
 
 // exports
 

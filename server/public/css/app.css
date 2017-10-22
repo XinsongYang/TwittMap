@@ -1,23 +1,34 @@
-html, body, #app, #content {
+html, body, .box {
     height: 100%;
     margin: 0;
     padding: 0;
 }
 
-#panel {
-    height: 100%;
-    padding-top: 15px;
+.box {
     display: flex;
+    display: -webkit-flex;
+}
+
+#app {
+    flex-direction: row;
+}
+
+#panel {
     flex-direction: column;
     flex-shrink: 0;
+    width: 300px;
 }
 
 #search-box {
     flex-shrink: 0;
-    display: flex;
 }
 
 #tweet-list {
     flex-grow: 1;
     overflow-y: auto;
+}
+
+#map {
+    height: 100%;
+    flex-grow: 1;
 }

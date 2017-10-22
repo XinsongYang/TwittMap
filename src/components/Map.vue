@@ -15,10 +15,6 @@
 
         props: ['tweets'],
 
-        components: {
-            'tweet': require('./Tweet'),
-        },
-
         mounted() {
             this.map = new google.maps.Map(document.getElementById('map'), {
                 center: {lat: 37.275518, lng: -104.657942},
@@ -34,25 +30,11 @@
 
         methods: {
             tweetContent(tweet) {
+                let date = new Date(parseInt(tweet.timestamp_ms));
                 return `
-                <div class="card">
-                  <div class="card-content">
-                    <div class="media">
-                      <div class="media-left">
-                        <figure class="image is-48x48">
-                          <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
-                        </figure>
-                      </div>
-                      <div class="media-content">
-                        <p class="title is-4">${ tweet.user.name }</p>
-                      </div>
-                    </div>
-                    <div class="content">
-                      ${ tweet.text }
-                      <br>
-                      <time>${ tweet.timestamp_ms }</time>
-                    </div>
-                  </div>
+                <div class="tweet">
+                    <span class="username">@${ tweet.user.name }}</span> <span class="time">${ date.toLocaleString() }</span>
+                    <div>${ tweet.text }</div>
                 </div>
                 `;
 
@@ -97,7 +79,5 @@
 </script>
 
 <style>
-    #map {
-        height: 100%;
-    }
+
 </style>

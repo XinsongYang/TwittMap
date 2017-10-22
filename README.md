@@ -6,6 +6,10 @@ TwittMap is a web application where you can search Twitts and represent the Twit
 
 http://twittmap-env-1.mbqqaa7dup.us-west-2.elasticbeanstalk.com/
 
+![demo-keyword](./static/img/demo-keyword.png)
+
+![demo-keyword](./static/img/demo-geospatial.png)
+
 ## Features
 
 * Use Twitter Streaming API (https://developer.twitter.com/en/docs). to fetch tweets from the twitter hose in real-time. Collect at least one week's worth of tweets. 

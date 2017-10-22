@@ -19,7 +19,6 @@ new Vue({
 
     methods: {
         search(api, params, isSearchAfter) {
-            console.log(params);
             axios.get(api, {
                 params: params
             }).then(response => {

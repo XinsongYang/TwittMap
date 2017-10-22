@@ -48,7 +48,7 @@ module.exports = {
                         }
                     },
                     sort: [
-                        { "_uid": { "order": "desc" } },
+                        { _uid: { order: 'desc' } },
                     ],
                 }
             };
@@ -91,17 +91,17 @@ module.exports = {
                             },
                             filter: {
                                 geo_distance: {
-                                    distance: "200km",
+                                    distance: '200km',
                                     "coordinates.coordinates": {
-                                        "lat": queryData.lat,
-                                        "lon": queryData.lon
+                                        lat: queryData.lat,
+                                        lon: queryData.lon
                                     }
                                 }
                             }
                         }
                     },
                     sort: [
-                        { "_uid": { "order": "desc" } },
+                        { _uid: { order: 'desc' } },
                     ],
                 }
             };

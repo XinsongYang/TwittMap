@@ -1,6 +1,6 @@
 <template>
     <div id="tweet-list" >
-        <tweet v-for="tweet in tweets" :key="tweet.id_str" :data="tweet" ></tweet>
+        <tweet v-for="(tweet, index) in tweets" :key="tweet.id_str" :index="index" :data="tweet" ></tweet>
         <button v-if="tweets.length" class="btn btn-link" @click="searchMore">Search More Tweets</button>
     </div>
 </template>
@@ -18,6 +18,15 @@
             searchMore() {
                 Event.$emit('searchMore');
             }
+        },
+
+        mounted() {
+            Event.$on('onMarker', index => {
+                this.$children[index].isHighlight = true;
+            });
+            Event.$on('outMarker', index => {
+                this.$children[index].isHighlight = false;
+            });
         }
     }
     

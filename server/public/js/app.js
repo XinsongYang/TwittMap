@@ -1459,7 +1459,6 @@ new Vue({
         search: function search(api, params, isSearchAfter) {
             var _this = this;
 
-            console.log(params);
             axios.get(api, {
                 params: params
             }).then(function (response) {
@@ -13323,7 +13322,7 @@ exports = module.exports = __webpack_require__(10)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -13367,6 +13366,8 @@ module.exports = function listToStyles (parentId, list) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 //
 //
 //
@@ -13385,15 +13386,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     props: ['tweets'],
 
     mounted: function mounted() {
+        var _this = this;
+
         this.map = new google.maps.Map(document.getElementById('map'), {
             center: { lat: 37.275518, lng: -104.657942 },
             zoom: 5,
             mapTypeControl: false
         });
+
         this.map.addListener('click', function (event) {
             var lat = event.latLng.lat();
             var lon = event.latLng.lng();
             Event.$emit('mapClicked', { lat: lat, lon: lon });
+        });
+
+        Event.$on('onTweet', function (index) {
+            _this.markers[index].setIcon('icons/red-marker.png');
+        });
+
+        Event.$on('outTweet', function (index) {
+            _this.markers[index].setIcon('icons/blue-marker.png');
         });
     },
 
@@ -13404,24 +13416,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return '\n            <div class="tweet">\n                <span class="username">@' + tweet.user.name + '}</span> <span class="time">' + date.toLocaleString() + '</span>\n                <div>' + tweet.text + '</div>\n            </div>\n            ';
         },
         render: function render() {
-            var _this = this;
+            var _this2 = this;
 
-            var _loop = function _loop(tweet) {
+            var _loop = function _loop(index, tweet) {
                 var coordinates = tweet.coordinates.coordinates;
                 var marker = new google.maps.Marker({
                     position: { lat: coordinates[1], lng: coordinates[0] },
-                    map: _this.map
+                    icon: 'icons/blue-marker.png',
+                    label: (index + 1).toString(),
+                    map: _this2.map
                 });
-
                 var tweetWindow = new google.maps.InfoWindow({
-                    content: _this.tweetContent(tweet),
+                    content: _this2.tweetContent(tweet),
                     maxWidth: 200
                 });
-                marker.addListener('click', function () {
+                marker.addListener('mouseover', function () {
                     tweetWindow.open(map, marker);
+                    this.setIcon('icons/red-marker.png');
+                    Event.$emit('onMarker', index);
+                });
+                marker.addListener('mouseout', function () {
+                    tweetWindow.close(map, marker);
+                    this.setIcon('icons/blue-marker.png');
+                    Event.$emit('outMarker', index);
                 });
 
-                _this.markers.push(marker);
+                _this2.markers.push(marker);
             };
 
             var _iteratorNormalCompletion = true;
@@ -13429,10 +13449,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _iteratorError = undefined;
 
             try {
-                for (var _iterator = this.tweets[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var tweet = _step.value;
+                for (var _iterator = this.tweets.entries()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var _ref = _step.value;
 
-                    _loop(tweet);
+                    var _ref2 = _slicedToArray(_ref, 2);
+
+                    var index = _ref2[0];
+                    var tweet = _ref2[1];
+
+                    _loop(index, tweet);
                 }
             } catch (err) {
                 _didIteratorError = true;
@@ -13709,8 +13734,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            isHighlight: false
+        };
+    },
 
-    props: ['data'],
+
+    props: ['data', 'index'],
 
     computed: {
         user: function user() {
@@ -13725,6 +13756,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         text: function text() {
             return this.data.text;
         }
+    },
+
+    methods: {
+        onTweet: function onTweet() {
+            Event.$emit('onTweet', this.index);
+        },
+        outTweet: function outTweet() {
+            Event.$emit('outTweet', this.index);
+        }
     }
 
 });
@@ -13737,13 +13777,23 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "tweet" }, [
-    _c("span", { staticClass: "username" }, [_vm._v("@" + _vm._s(_vm.user))]),
-    _vm._v(" "),
-    _c("span", { staticClass: "time" }, [_vm._v(_vm._s(_vm.time))]),
-    _vm._v(" "),
-    _c("div", [_vm._v(_vm._s(_vm.text))])
-  ])
+  return _c(
+    "div",
+    {
+      staticClass: "tweet tweet-li",
+      class: { highlight: _vm.isHighlight },
+      on: { mouseenter: _vm.onTweet, mouseleave: _vm.outTweet }
+    },
+    [
+      _c("span", [_vm._v(_vm._s(_vm.index + 1) + ".")]),
+      _vm._v(" "),
+      _c("span", { staticClass: "username" }, [_vm._v("@" + _vm._s(_vm.user))]),
+      _vm._v(" "),
+      _c("span", { staticClass: "time" }, [_vm._v(_vm._s(_vm.time))]),
+      _vm._v(" "),
+      _c("div", [_vm._v(_vm._s(_vm.text))])
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -13833,6 +13883,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         searchMore: function searchMore() {
             Event.$emit('searchMore');
         }
+    },
+
+    mounted: function mounted() {
+        var _this = this;
+
+        Event.$on('onMarker', function (index) {
+            _this.$children[index].isHighlight = true;
+        });
+        Event.$on('outMarker', function (index) {
+            _this.$children[index].isHighlight = false;
+        });
     }
 });
 
@@ -13848,8 +13909,11 @@ var render = function() {
     "div",
     { attrs: { id: "tweet-list" } },
     [
-      _vm._l(_vm.tweets, function(tweet) {
-        return _c("tweet", { key: tweet.id_str, attrs: { data: tweet } })
+      _vm._l(_vm.tweets, function(tweet, index) {
+        return _c("tweet", {
+          key: tweet.id_str,
+          attrs: { index: index, data: tweet }
+        })
       }),
       _vm._v(" "),
       _vm.tweets.length
@@ -13908,7 +13972,7 @@ exports = module.exports = __webpack_require__(10)(undefined);
 
 
 // module
-exports.push([module.i, "\n.tweet {\n    font-size: 12px;\n    padding: 10px;\n    border-bottom-style: solid;\n    border-width: 1px;\n    border-color: #cccccc;\n}\n.tweet:hover {\n    background: #f9f9f9;\n}\n.tweet .username {\n    color: #3b94d9;\n    font-weight: bold;\n}\n.tweet .time {\n    color: #a7a7a7;\n    font-size: 11px;\n}\n", ""]);
+exports.push([module.i, "\n.tweet {\n    font-size: 12px;\n}\n.tweet .username {\n    color: #3b94d9;\n    font-weight: bold;\n}\n.tweet .time {\n    color: #a7a7a7;\n    font-size: 11px;\n}\n.tweet-li {\n    padding: 10px;\n    border-bottom-style: solid;\n    border-width: 1px;\n    border-color: #cccccc;\n}\n.tweet-li:hover, .highlight {\n    background: #f5f5f5;\n}\n", ""]);
 
 // exports
 
@@ -13948,7 +14012,7 @@ exports = module.exports = __webpack_require__(10)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 

@@ -21,10 +21,19 @@
                 zoom: 5,
                 mapTypeControl: false
             });
+
             this.map.addListener('click', function(event) {
                 let lat = event.latLng.lat();
                 let lon = event.latLng.lng();
                 Event.$emit('mapClicked', {lat, lon});
+            });
+
+            Event.$on('onTweet', index => {
+                this.markers[index].setIcon('icons/red-marker.png');
+            });
+
+            Event.$on('outTweet', index => {
+                this.markers[index].setIcon('icons/blue-marker.png');
             });
         },
 
@@ -41,19 +50,27 @@
             },
 
             render() {
-                for (let tweet of this.tweets) {
+                for (let [index, tweet] of this.tweets.entries()) {
                     let coordinates = tweet.coordinates.coordinates;
                     let marker = new google.maps.Marker({
                         position: {lat: coordinates[1], lng: coordinates[0]},
+                        icon: 'icons/blue-marker.png',
+                        label: (index + 1).toString(),
                         map: this.map
-                    })
-                    
+                    });
                     let tweetWindow = new google.maps.InfoWindow({
                         content: this.tweetContent(tweet),
                         maxWidth: 200
                     })
-                    marker.addListener('click', function() {
+                    marker.addListener('mouseover', function() {
                         tweetWindow.open(map, marker);
+                        this.setIcon('icons/red-marker.png');
+                        Event.$emit('onMarker', index);
+                    });
+                    marker.addListener('mouseout', function() {
+                        tweetWindow.close(map, marker);
+                        this.setIcon('icons/blue-marker.png');
+                        Event.$emit('outMarker', index);
                     });
 
                     this.markers.push(marker);

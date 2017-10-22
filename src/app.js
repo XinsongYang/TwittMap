@@ -19,6 +19,7 @@ new Vue({
 
     methods: {
         search(api, params, isSearchAfter) {
+            console.log(params);
             axios.get(api, {
                 params: params
             }).then(response => {
@@ -43,7 +44,7 @@ new Vue({
         },
 
         searchByCoord(coordinate, isSearchAfter=false) {
-            let params = { coordinate };
+            let params = coordinate;
             if (isSearchAfter) {
                 let lastTweet = this.tweets[this.tweets.length - 1];
                 params.searchAfter = "tweet#" + lastTweet.id_str;

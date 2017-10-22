@@ -99,7 +99,10 @@ module.exports = {
                                 }
                             }
                         }
-                    }
+                    },
+                    sort: [
+                        { "_uid": { "order": "desc" } },
+                    ],
                 }
             };
             if ('searchAfter' in queryData) {

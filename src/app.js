@@ -6,8 +6,9 @@ new Vue({
     data: {
         hotKeywords: [],
         keyword: '',
+        distance: 200,
         coordinate: {},
-        searchType: '',
+        searchType: 'keyword',
         tweets: [],
     },
 
@@ -45,6 +46,7 @@ new Vue({
 
         searchByCoord(coordinate, isSearchAfter=false) {
             let params = coordinate;
+            params.distance = this.distance.toString() + 'km';
             if (isSearchAfter) {
                 let lastTweet = this.tweets[this.tweets.length - 1];
                 params.searchAfter = "tweet#" + lastTweet.id_str;
@@ -80,13 +82,24 @@ new Vue({
         });
 
         Event.$on('mapClicked', coordinate => {
-            this.coordinate = coordinate;
-            this.searchType = 'coordinate';
-            this.searchByCoord(coordinate, false);
+            if (this.searchType == 'coordinate') {
+                this.coordinate = coordinate;
+                this.searchType = 'coordinate';
+                this.searchByCoord(coordinate, false);
+            }
         });
 
         Event.$on('searchMore', coordinate => {
             this.searchMore();
+        });
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', e => {
+            let tab = $(e.target).text(); // activated tab
+            if (tab == 'Geospatial') {
+                this.searchType = 'coordinate';
+            } else  {
+                this.searchType = 'keyword';
+            }
         });
     
     }

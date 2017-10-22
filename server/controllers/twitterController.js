@@ -77,7 +77,8 @@ module.exports = {
         let queryData = url.parse(ctx.request.url, true).query;
         let validation = new Validator(queryData, {
             lat: 'required',
-            lon: 'required'
+            lon: 'required',
+            distance: 'required'
         });
         if (validation.passes()) {
             let params = {
@@ -92,7 +93,7 @@ module.exports = {
                             },
                             filter: {
                                 geo_distance: {
-                                    distance: '200km',
+                                    distance: queryData.distance,
                                     "coordinates.coordinates": {
                                         lat: queryData.lat,
                                         lon: queryData.lon

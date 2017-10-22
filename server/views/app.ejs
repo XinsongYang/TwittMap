@@ -1,0 +1,24 @@
+<div id="app" class="box">
+    <div id="panel" class="box">
+        <div id="searchNav">
+            <nav class="nav nav-tabs" id="searchTab" role="tablist">
+              <a class="nav-item nav-link active" id="nav-keyword-tab" data-toggle="tab" href="#nav-keyword" role="tab" aria-controls="nav-keyword" aria-selected="true">Keyword</a>
+              <a class="nav-item nav-link" id="nav-geo-tab" data-toggle="tab" href="#nav-geo" role="tab" aria-controls="nav-geo" aria-selected="false">Geospatial</a>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+              <div class="tab-pane fade show active" id="nav-keyword" role="tabpanel" aria-labelledby="nav-keyword-tab">
+                  <search-box :suggestions="hotKeywords"></search-box>
+              </div>
+              <div class="tab-pane fade" id="nav-geo" role="tabpanel" aria-labelledby="nav-geo-tab">
+                    <div id="geo-input" class="input-group"> 
+                      <span class="input-group-addon">Within</span>
+                      <input id="distance" v-model="distance" class="form-control" type="number" value="200" min="1" max="1000">
+                      <span class="input-group-addon">km</span>
+                    </div>
+              </div>
+            </div>
+        </div>
+        <tweet-list :tweets="tweets"></tweet-list>
+    </div> 
+    <gmap :tweets="tweets"></gmap>
+</div>

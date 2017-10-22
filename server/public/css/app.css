@@ -19,8 +19,12 @@ html, body, .box {
     width: 300px;
 }
 
-#search-box {
+#searchNav {
     flex-shrink: 0;
+}
+
+#geo-input {
+    padding: 10px;
 }
 
 #tweet-list {

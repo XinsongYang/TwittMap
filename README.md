@@ -17,4 +17,4 @@ http://twittmap-env-1.mbqqaa7dup.us-west-2.elasticbeanstalk.com/
 
 ## Reference
 
-http://twittmap-env-1.mbqqaa7dup.us-west-2.elasticbeanstalk.com/
+https://aws.amazon.com/blogs/big-data/building-a-near-real-time-discovery-platform-with-aws/

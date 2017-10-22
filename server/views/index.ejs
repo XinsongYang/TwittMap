@@ -11,7 +11,7 @@
         
         <div id="app" class="box">
             <div id="panel" class="box">
-                <search-box></search-box>
+                <search-box :suggestions="hotKeywords"></search-box>
                 <tweet-list :tweets="tweets"></tweet-list>
             </div> 
             <gmap :tweets="tweets"></gmap>

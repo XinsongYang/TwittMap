@@ -7,7 +7,7 @@ const client = new elasticsearch.Client({
 });
 
 module.exports = {
-    async getKeywords(ctx, next) {
+    async getHotKeywords(ctx, next) {
         await client.search({
             index: 'twitter',
             type: 'tweet',
@@ -22,8 +22,9 @@ module.exports = {
             }
         }).then(function(resp) {
             let hashtags = resp.aggregations.tophashtags.buckets;
+            let hotKeywords = hashtags.map(hashtag => hashtag.key);
             ctx.rest({
-                keywords: hashtags
+                hotKeywords
             });
         }, function(err) {
             throw new APIError(err.code, err.message);

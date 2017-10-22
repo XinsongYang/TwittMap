@@ -1442,6 +1442,7 @@ new Vue({
     el: '#app',
 
     data: {
+        hotKeywords: [],
         keyword: '',
         coordinate: {},
         searchType: '',
@@ -1501,23 +1502,33 @@ new Vue({
         }
     },
 
-    mounted: function mounted() {
+    created: function created() {
         var _this2 = this;
 
+        axios.get('/api/hotKeywords').then(function (response) {
+            _this2.hotKeywords = response.data.hotKeywords;
+        }).catch(function (error) {
+            alert("error");
+            console.log(error);
+        });
+    },
+    mounted: function mounted() {
+        var _this3 = this;
+
         Event.$on('keywordSubmit', function (keyword) {
-            _this2.keyword = keyword;
-            _this2.searchType = 'keyword';
-            _this2.searchByKeyword(keyword, false);
+            _this3.keyword = keyword;
+            _this3.searchType = 'keyword';
+            _this3.searchByKeyword(keyword, false);
         });
 
         Event.$on('mapClicked', function (coordinate) {
-            _this2.coordinate = coordinate;
-            _this2.searchType = 'coordinate';
-            _this2.searchByCoord(coordinate, false);
+            _this3.coordinate = coordinate;
+            _this3.searchType = 'coordinate';
+            _this3.searchByCoord(coordinate, false);
         });
 
         Event.$on('searchMore', function (coordinate) {
-            _this2.searchMore();
+            _this3.searchMore();
         });
     }
 });
@@ -13553,8 +13564,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -13563,6 +13572,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
 
+
+    props: ['suggestions'],
 
     methods: {
         keywordSubmit: function keywordSubmit() {
@@ -13607,7 +13618,8 @@ var render = function() {
             type: "text",
             id: "keyword",
             list: "suggestions",
-            placeholder: "keyword"
+            placeholder: "keyword",
+            required: ""
           },
           domProps: { value: _vm.keyword },
           on: {
@@ -13620,26 +13632,20 @@ var render = function() {
           }
         }),
         _vm._v(" "),
-        _vm._m(0),
+        _c(
+          "datalist",
+          { attrs: { id: "suggestions" } },
+          _vm._l(_vm.suggestions, function(word) {
+            return _c("option", { domProps: { value: word } })
+          })
+        ),
         _vm._v(" "),
-        _vm._m(1)
+        _vm._m(0)
       ]
     )
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("datalist", { attrs: { id: "suggestions" } }, [
-      _c("option", { attrs: { value: "job" } }),
-      _vm._v(" "),
-      _c("option", { attrs: { value: "hire" } }),
-      _vm._v(" "),
-      _c("option", { attrs: { value: "test" } })
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

@@ -4,6 +4,7 @@ new Vue({
     el: '#app',
 
     data: {
+        hotKeywords: [],
         keyword: '',
         coordinate: {},
         searchType: '',
@@ -58,6 +59,16 @@ new Vue({
                 this.searchByCoord(this.coordinate, true);
             }
         }
+    },
+
+    created() {
+        axios.get('/api/hotKeywords')
+            .then(response => {
+                this.hotKeywords = response.data.hotKeywords;
+            }).catch( error => {
+                alert("error");
+                console.log(error);
+            });
     },
 
     mounted() {

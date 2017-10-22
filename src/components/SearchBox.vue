@@ -1,11 +1,9 @@
 <template>
     <div id="search-box" >
         <form @submit.prevent="keywordSubmit" class="input-group">
-            <input type="text" id="keyword" v-model="keyword" list="suggestions" placeholder="keyword" class="form-control"> 
+            <input type="text" id="keyword" v-model="keyword" list="suggestions" placeholder="keyword" class="form-control" required > 
             <datalist id="suggestions">
-                <option value="job"></option>
-                <option value="hire"></option>
-                <option value="test"></option>
+                <option v-for="word in suggestions" :value="word"></option>
             </datalist>
             <span class="input-group-btn">
                 <button type="submit" class="btn btn-primary">Search</button>
@@ -22,6 +20,8 @@
                 keyword: ''
             }
         },
+
+        props: ['suggestions'],
 
         methods: {
             keywordSubmit() {

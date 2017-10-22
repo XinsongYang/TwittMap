@@ -34,10 +34,10 @@ module.exports = {
     async getTweetsByKeyword(ctx, next) {
         let queryData = url.parse(ctx.request.url, true).query;
         let validation = new Validator(queryData, {
-            keyword: 'required'
+            keyword: 'required',
         });
         if (validation.passes()) {
-            await client.search({
+            let params = {
                 index: 'twitter',
                 type: 'tweet',
                 body: {
@@ -48,11 +48,14 @@ module.exports = {
                         }
                     },
                     sort: [
-                        { "timestamp_ms": { "order": "desc" } },
-                        { "user.id": { "order": "asc" } },
+                        { "_uid": { "order": "desc" } },
                     ],
                 }
-            }).then(function(resp) {
+            };
+            if ('searchAfter' in queryData) {
+                params.body.search_after = [queryData.searchAfter];
+            }
+            await client.search(params).then(function(resp) {
                 // TODO try
                 let hits = resp.hits.hits;
                 let tweets = hits.map(hit => hit._source);
@@ -76,28 +79,33 @@ module.exports = {
             lon: 'required'
         });
         if (validation.passes()) {
-            await client.search({
+            let params = {
                 index: 'twitter',
-                    type: 'tweet',
-                    body: {
-                        query: {
-                            bool: {
-                                must: {
-                                    match_all: {}
-                                },
-                                filter: {
-                                    geo_distance: {
-                                        distance: "200km",
-                                        "coordinates.coordinates": {
-                                            "lat": queryData.lat,
-                                            "lon": queryData.lon
-                                        }
+                type: 'tweet',
+                body: {
+                    size: 10,
+                    query: {
+                        bool: {
+                            must: {
+                                match_all: {}
+                            },
+                            filter: {
+                                geo_distance: {
+                                    distance: "200km",
+                                    "coordinates.coordinates": {
+                                        "lat": queryData.lat,
+                                        "lon": queryData.lon
                                     }
                                 }
                             }
                         }
                     }
-            }).then(function(resp) {
+                }
+            };
+            if ('searchAfter' in queryData) {
+                params.body.search_after = [queryData.searchAfter];
+            }
+            await client.search(params).then(function(resp) {
                 // TODO try
                 let hits = resp.hits.hits;
                 let tweets = hits.map(hit => hit._source);

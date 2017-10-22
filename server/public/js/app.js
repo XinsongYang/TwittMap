@@ -1442,9 +1442,10 @@ new Vue({
     el: '#app',
 
     data: {
-        //keyword: '',
-        tweets: [],
-        response: {}
+        keyword: '',
+        coordinate: {},
+        searchType: '',
+        tweets: []
     },
 
     components: {
@@ -1455,39 +1456,68 @@ new Vue({
     },
 
     methods: {
-        searchByKeyword: function searchByKeyword(keyword) {
+        search: function search(api, params, isSearchAfter) {
             var _this = this;
 
-            axios.get('/api/tweetsByKeyword', {
-                params: { keyword: keyword }
+            axios.get(api, {
+                params: params
             }).then(function (response) {
-                _this.tweets = response.data.tweets;
+                if (isSearchAfter) {
+                    _this.tweets = _this.tweets.concat(response.data.tweets);
+                } else {
+                    _this.tweets = response.data.tweets;
+                }
             }).catch(function (error) {
                 alert("error");
                 console.log(error);
             });
         },
-        searchByCoord: function searchByCoord(coordinate) {
-            var _this2 = this;
+        searchByKeyword: function searchByKeyword(keyword) {
+            var isSearchAfter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
-            axios.get('/api/tweetsByCoord', {
-                params: coordinate
-            }).then(function (response) {
-                _this2.tweets = response.data.tweets;
-            }).catch(function (error) {
-                alert("error");
-                console.log(error);
-            });
+            var params = { keyword: keyword };
+            if (isSearchAfter) {
+                var lastTweet = this.tweets[this.tweets.length - 1];
+                params.searchAfter = "tweet#" + lastTweet.id_str;
+            }
+            this.search('/api/tweetsByKeyword', params, isSearchAfter);
+        },
+        searchByCoord: function searchByCoord(coordinate) {
+            var isSearchAfter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+            var params = { coordinate: coordinate };
+            if (isSearchAfter) {
+                var lastTweet = this.tweets[this.tweets.length - 1];
+                params.searchAfter = "tweet#" + lastTweet.id_str;
+            }
+            this.search('/api/tweetsByCoord', params, isSearchAfter);
+        },
+        searchMore: function searchMore() {
+            if (this.searchType == 'keyword') {
+                this.searchByKeyword(this.keyword, true);
+            } else if (this.searchType == 'coordinate') {
+                this.searchByCoord(this.coordinate, true);
+            }
         }
     },
 
     mounted: function mounted() {
-        var _this3 = this;
+        var _this2 = this;
 
-        Event.$on('search', function (keyword) {
-            _this3.searchByKeyword(keyword);
-        }), Event.$on('mapClicked', function (coordinate) {
-            _this3.searchByCoord(coordinate);
+        Event.$on('keywordSubmit', function (keyword) {
+            _this2.keyword = keyword;
+            _this2.searchType = 'keyword';
+            _this2.searchByKeyword(keyword, false);
+        });
+
+        Event.$on('mapClicked', function (coordinate) {
+            _this2.coordinate = coordinate;
+            _this2.searchType = 'coordinate';
+            _this2.searchByCoord(coordinate, false);
+        });
+
+        Event.$on('searchMore', function (coordinate) {
+            _this2.searchMore();
         });
     }
 });
@@ -13509,8 +13539,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
     methods: {
-        search: function search() {
-            Event.$emit('search', keyword);
+        keywordSubmit: function keywordSubmit() {
+            Event.$emit('keywordSubmit', this.keyword);
         }
     }
 
@@ -13532,7 +13562,7 @@ var render = function() {
         on: {
           submit: function($event) {
             $event.preventDefault()
-            _vm.search($event)
+            _vm.keywordSubmit($event)
           }
         }
       },
@@ -13788,6 +13818,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -13795,6 +13826,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     components: {
         'tweet': __webpack_require__(51)
+    },
+
+    methods: {
+        searchMore: function searchMore() {
+            Event.$emit('searchMore');
+        }
     }
 });
 
@@ -13809,9 +13846,20 @@ var render = function() {
   return _c(
     "div",
     { attrs: { id: "tweet-list" } },
-    _vm._l(_vm.tweets, function(tweet) {
-      return _c("tweet", { key: tweet.id_str, attrs: { data: tweet } })
-    })
+    [
+      _vm._l(_vm.tweets, function(tweet) {
+        return _c("tweet", { key: tweet.id_str, attrs: { data: tweet } })
+      }),
+      _vm._v(" "),
+      _vm.tweets.length
+        ? _c(
+            "button",
+            { staticClass: "btn btn-link", on: { click: _vm.searchMore } },
+            [_vm._v("Search More Tweets")]
+          )
+        : _vm._e()
+    ],
+    2
   )
 }
 var staticRenderFns = []
@@ -13899,7 +13947,7 @@ exports = module.exports = __webpack_require__(10)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 

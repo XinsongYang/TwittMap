@@ -1,6 +1,6 @@
 <template>
     <div id="search-box" >
-        <form @submit.prevent="search" class="input-group">
+        <form @submit.prevent="keywordSubmit" class="input-group">
             <input type="text" id="keyword" v-model="keyword" list="suggestions" placeholder="keyword" class="form-control"> 
             <datalist id="suggestions">
                 <option value="job"></option>
@@ -24,8 +24,8 @@
         },
 
         methods: {
-            search() {
-                Event.$emit('search', keyword);
+            keywordSubmit() {
+                Event.$emit('keywordSubmit', this.keyword);
             }
         }
 

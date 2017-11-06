@@ -33,10 +33,10 @@ var config = module.exports = {
   }
   },
   twitter: {
-      consumer_key: '<YOUR CONSUMER KEY>',
-      consumer_secret: '<YOUR CONSUMER SECRET>',
-      access_token: '<YOUR ACCESS TOKEN>',
-      access_token_secret: '<YOUR ACCESS TOKEN SECRET>'
+      consumer_key: 'jZVmHfXqbVoiDGuIm53mtxBVA',
+      consumer_secret: 'rQU2eqNXQWsqN6BLEQrpWgukXgA1YxfzfQMXIZs5zqL45FIh7e',
+      access_token: '2424882828-d81pbgcBWpMBMJemVYMf3QGCg0ICg3OXOrkOowR',
+      access_token_secret: 'BK1QrgEL752V6rKTRbzWCA1MudFx4oTbzciSeoch8jLii'
  },
  locations: ['-127.33,23.34,-55.52,49.56'], //US   (All the world:'-180,-90,180,90; New York City:-74,40,-73,41; San Francisco:-122.75,36.8,-121.75,37.8, US:-127.33,23.34,-55.52,49.56)
  waitBetweenDescribeCallsInSeconds: 2,
